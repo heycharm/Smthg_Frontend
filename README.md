@@ -1,75 +1,163 @@
-# React + TypeScript + Vite
+# Wind Generation Analysis — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React frontend for analysing UK national-level wind generation forecasts and actual generation for **January 2026**.
 
-Currently, two official plugins are available:
+The application communicates with the Python backend and presents forecast performance through interactive charts and summary metrics.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- React
+- TypeScript
+- Vite
+- Material UI
+- Recharts
+- Docker
+- Vercel
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+The dashboard provides:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Wind generation actual vs forecast
+- Latest forecast analysis
+- Forecast error analysis
+- Daily forecast accuracy
+- Forecast evolution
+- MAE
+- RMSE
+- MAPE
+- Average actual generation
+- Average forecast generation
+- Hours analysed
+- January 2026 date selection
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+GridBlocksAssignment_Frontend/
+├── src/
+│   ├── components/
+│   │   └── WindGenerationChart.tsx
+│   ├── App.tsx
+│   ├── config.ts
+│   └── main.tsx
+├── public/
+├── Dockerfile
+├── .dockerignore
+├── package.json
+├── package-lock.json
+├── vite.config.ts
+└── README.md
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Files
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**`App.tsx`**
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Main application component. Handles API data loading and dashboard state.
 
+**`components/WindGenerationChart.tsx`**
+
+Contains the visualisation components for wind generation and forecast analysis.
+
+**`config.ts`**
+
+Reads the backend API URL from the Vite environment configuration.
+
+## Environment Configuration
+
+Create a `.env` file in the frontend root:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
 ```
+
+The deployed application uses the deployed backend URL as the value of `VITE_API_BASE_URL`.
+
+## Running Locally
+
+### Prerequisites
+
+- Node.js
+- npm
+
+Install dependencies:
+
+```bash
+npm install --legacy-peer-deps
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The frontend will be available at:
+
+```text
+http://localhost:5173
+```
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+The production build is generated in the `dist` directory.
+
+## Running with Docker
+
+Build the frontend image:
+
+```bash
+docker build \
+  --build-arg VITE_API_BASE_URL=http://localhost:8000 \
+  -t wind-analysis-frontend .
+```
+
+Run the container:
+
+```bash
+docker run --rm -p 5173:80 wind-analysis-frontend
+```
+
+The application will be available at:
+
+```text
+http://localhost:5173
+```
+
+## Backend API
+
+The frontend consumes the following backend endpoints:
+
+```text
+/api/wind/actuals
+/api/wind/forecasts
+/api/wind/analysis
+/api/wind/summary
+/api/wind/daily
+/api/wind/forecast-evolution
+```
+
+The frontend and backend are maintained as separate applications.
+
+## Deployment
+
+The frontend is deployed using Vercel.
+
+**Live Application:**  
+[\[Vercel URL\]](https://windanalysisbychinmay.vercel.app/)
+
+The deployed frontend connects to the publicly deployed Python backend through the `VITE_API_BASE_URL` environment variable.
+
+## AI Tools Used
+
+AI tools were used during development for assistance with:
+
+- Code refinement
+- Debugging
+- UI implementation
+- Troubleshooting build and deployment issues
